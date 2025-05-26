@@ -1,0 +1,20 @@
+---
+- name: Set SELinux to permissive
+  hosts: all
+  become: yes
+  tasks:
+    - name: Set SELinux to permissive
+      shell: setenforce 0
+      when: ansible_distribution == "Fedora"
+
+    - name: Install package using dnf module
+      dnf:
+        name: etckeeper
+        state: present
+      register: dnf_result
+      when: ansible_distribution == "Fedora"
+
+    - name: Display dnf module result
+      debug:
+        var: dnf_result
+      when: ansible_distribution == "Fedora"

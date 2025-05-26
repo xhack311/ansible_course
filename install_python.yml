@@ -1,0 +1,36 @@
+---
+- name: Install Python and dependencies on Fedora
+  hosts: all
+  become: yes  # Use sudo to gain necessary privileges
+  tasks:
+    - name: Check if Python is already installed
+      command: which python3
+      register: python_check
+      ignore_errors: yes
+      when: ansible_distribution == "Fedora"
+
+    - name: Display Python check result
+      debug:
+        var: python_check
+      when: ansible_distribution == "Fedora"
+
+    - name: Install Python and dependencies using dnf
+      raw: dnf install -y python3 python3-dnf python3-libselinux python3-libs
+      register: install_result
+      when: ansible_distribution == "Fedora"
+
+    - name: Display the result of the installation
+      debug:
+        var: install_result
+      when: ansible_distribution == "Fedora" 
+
+    - name: Verify Python installation
+      command: python3 --version
+      register: python_version
+      ignore_errors: yes
+      when: ansible_distribution == "Fedora"
+
+    - name: Display Python version
+      debug:
+        var: python_version
+      when: ansible_distribution == "Fedora"

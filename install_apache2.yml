@@ -1,0 +1,11 @@
+---
+- hosts: 192.168.1.118
+  become: true
+  tasks:
+
+  - name: install httpd package
+    dnf:
+      name:
+        - httpd
+        - php
+      state: latest
