@@ -23,6 +23,21 @@
       name: simone
       groups: root
 
+  - name: add sudoers file for simone
+    tags: always
+    ansible.builtin.copy:
+      src: sudoer_simone
+      dest: /etc/sudoers.d/simone
+      owner: root
+      group: root
+      mode: 0440
+
+  - name: add ssh key for simone user
+    tags: always
+    ansible.builtin.authorized_key:
+      user: simone
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOBVLARuiaC/a37irpQuEJUqq6D4ntu2AX+M3700DYAr beardy@ansible-ws"
+
 - hosts: web_servers
   become: true
   tasks:
@@ -34,6 +49,27 @@
         - apache2
         - libapache2-mod-php
     when: ansible_distribution == "Ubuntu"
+
+  - name: install apache on  web servers (fedora)
+    tags: apache, fedora
+    ansible.builtin.dnf:
+      name: httpd
+      state: latest
+    when: ansible_distribution == "Fedora"
+
+  - name: ensure apache is running (ubuntu)
+    tags: apache,ubuntu
+    ansible.builtin.service:
+      name: apache2
+      state: started
+    when: ansible_distribution == "Ubuntu"
+
+  - name: ensure apache is runnning (fedora)
+    tags: apache,fedora
+    ansible.builtin.service:
+      name: httpd
+      state: started
+    when: ansible_distribution == "Fedora"
 
   - name: copy html file for site
     tags: apache,ubuntu
