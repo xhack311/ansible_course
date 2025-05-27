@@ -73,14 +73,14 @@
 
   - name: change e-mail address for admin
     tags: apache,fedora
-    ansbile.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: /etc/httpd/conf/httpd.conf
       regexp: '^ServerAdmin'
       line: ServerAdmin somebody@somwhere.net
     when: ansible_distribution == "Fedora"
     register: httpd
 
-  - name: resatrt httpd (fedora)
+  - name: restart httpd (fedora)
     tags: apache,fedora
     ansible.builtin.service:
       name: httpd
