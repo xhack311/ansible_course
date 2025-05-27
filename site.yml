@@ -80,6 +80,13 @@
     when: ansible_distribution == "Fedora"
     register: httpd
 
+  - name: resatrt httpd (fedora)
+    tags: apache,fedora
+    ansible.builtin.service:
+      name: httpd
+      state: restarted
+    when: httpd.changed
+
   - name: copy html file for site
     tags: apache,ubuntu
     ansible.builtin.copy:
